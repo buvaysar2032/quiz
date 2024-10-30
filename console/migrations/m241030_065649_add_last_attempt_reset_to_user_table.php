@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Class m241029_134708_add_last_attempt_reset_to_user_table
+ * Class m241030_065649_add_last_attempt_reset_to_user_table
  */
-class m241029_134708_add_last_attempt_reset_to_user_table extends Migration
+class m241030_065649_add_last_attempt_reset_to_user_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->addColumn('user', 'last_attempt_reset', $this->dateTime());
+        $this->addColumn('user', 'last_attempt_reset', $this->integer());
     }
 
     /**

@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             Column::widget(),
             Column::widget(['attr' => 'text']),
+            Column::widget(['attr' => 'position']),
             [
                 'label' => Yii::t('app', 'Answers'),
                 'format' => 'raw',

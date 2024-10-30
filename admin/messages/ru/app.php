@@ -178,4 +178,6 @@ return [
     'Answers' => 'Ответы',
     'Create Answers' => 'Добавить ответ',
     'Update Answers: {name}' => 'Изменить ответ: {name}',
+
+    'Is Correct' => 'Правильно',
 ];

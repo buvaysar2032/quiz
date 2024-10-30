@@ -4,6 +4,7 @@ namespace common\modules\user\models;
 
 use common\components\export\ExportConfig;
 use common\models\AppActiveRecord;
+use common\models\Setting;
 use common\modules\user\{enums\Status, Module};
 use OpenApi\Attributes\{Property, Schema};
 use Yii;
@@ -29,6 +30,8 @@ use yii\web\IdentityInterface;
  * @property int                  $updated_at           [int] Дата изменения
  * @property int                  $status               [int] Статус
  * @property int                  $last_ip              [bigint] Последний IP адрес
+ * @property int                  $quiz_attempts
+ * @property string|null          $last_attempt_reset
  *
  * @property-read array           $profile
  *
@@ -69,13 +72,28 @@ class User extends AppActiveRecord implements IdentityInterface, ExportConfig
     ])]
     final public function getProfile(): array
     {
+        if ($this->attempts()) {
+            $this->quiz_attempts = Setting::getParameterValue('quiz_attempts');
+            $this->last_attempt_reset = time();
+            $this->save();
+        }
+
+        $resetTime = strtotime('tomorrow') - time();
+
         return [
             'id' => $this->id,
             'access_token' => $this->authKey,
             'username' => $this->username,
             'email' => $this->email->value ?? null,
-            'is_email_confirmed' => (bool)($this->email->is_confirmed ?? null)
+            'is_email_confirmed' => (bool)($this->email->is_confirmed ?? null),
+            'quiz_attempts' => $this->quiz_attempts,
+            'time_until_reset' => $resetTime,
         ];
+    }
+
+    public function attempts(): bool
+    {
+        return strtotime('today') > $this->last_attempt_reset && ($this->quiz_attempts < Setting::getParameterValue('quiz_attempts'));
     }
 
     /**
